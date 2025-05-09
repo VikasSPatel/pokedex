@@ -1,2 +1,3 @@
-# pokedex
+# pokédex
+
 Pokédex is a high-tech encyclopedia used to identify and gather information about Pokémon.
