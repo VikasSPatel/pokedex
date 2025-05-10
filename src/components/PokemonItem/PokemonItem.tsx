@@ -31,12 +31,12 @@ const useStyles = createUseStyles(
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundImage: `url('/logo.png')`, // Use the logo from the public folder
+        backgroundImage: `url('/logo.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        opacity: 0.3, // Set opacity to make the background less prominent
-        zIndex: -1, // Ensure it stays in the background behind the card content
+        opacity: 0.3,
+        zIndex: -1,
       },
 
       '& $pokeName': {
@@ -74,8 +74,8 @@ const useStyles = createUseStyles(
       },
 
       '&:hover': {
-        transform: 'scale(1.05)', // Slightly increase the size of the card on hover
-        boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)', // Add a stronger shadow to create a "lift" effect
+        transform: 'scale(1.05)',
+        boxShadow: '0 6px 15px rgba(0, 0, 0, 0.2)',
 
         '& $pokeImageHover': {
           transform: 'scale(1.1)',

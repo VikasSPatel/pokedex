@@ -1,4 +1,3 @@
-// src/hooks/useGetPokemonDetails.ts
 import { gql, useQuery } from '@apollo/client';
 import { PokemonDetails } from '../types/pokemonTypes';
 import { useMemo } from 'react';

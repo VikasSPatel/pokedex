@@ -27,17 +27,15 @@ export const PokemonList = () => {
   }, [search]);
 
   const loadMorePokemons = useCallback(() => {
-    // Logic for lazy loading as you scroll
     if (pokemons && pokemons.length > displayedPokemons.length) {
       setDisplayedPokemons((prev) => [
         ...prev,
-        ...pokemons.slice(prev.length, prev.length + 10), // Show 10 more at a time
+        ...pokemons.slice(prev.length, prev.length + 10),
       ]);
     }
   }, [pokemons, displayedPokemons]);
 
   useEffect(() => {
-    // Initialize Intersection Observer for lazy loading
     const newObserver = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         loadMorePokemons();
@@ -52,9 +50,8 @@ export const PokemonList = () => {
   }, [loadMorePokemons]);
 
   useEffect(() => {
-    // Load initial data when the component mounts
     if (pokemons.length) {
-      setDisplayedPokemons(pokemons.slice(0, 10)); // Show first 10 items
+      setDisplayedPokemons(pokemons.slice(0, 10));
     }
   }, [pokemons]);
 
@@ -66,12 +63,11 @@ export const PokemonList = () => {
       pokemon.types.some((type) => type.toLowerCase().includes(query))
     );
   });
-  // Handle opening dialog when a Pokémon is clicked
+
   const handlePokemonClick = (id: string) => {
-    setSelectedPokemonId(id); // Set the selected Pokémon's id
+    setSelectedPokemonId(id);
   };
 
-  // Handle closing the dialog
   const handleCloseDialog = () => {
     setSelectedPokemonId(null);
   };
@@ -107,7 +103,7 @@ export const PokemonList = () => {
             >
               <PokemonItem
                 pokemon={pkmn}
-                onClick={() => handlePokemonClick(pkmn.id)} // Trigger on click
+                onClick={() => handlePokemonClick(pkmn.id)}
               />
             </CSSTransition>
           ))}
@@ -133,8 +129,8 @@ export const PokemonList = () => {
         <PokemonDetailsDialog
           open={Boolean(selectedPokemonId)}
           onClose={handleCloseDialog}
-          pokemonId={selectedPokemonId} // Pass the ID to the dialog to fetch details
-          showLoader={setLoadingDetails} // Pass the loading state to the dialog
+          pokemonId={selectedPokemonId}
+          showLoader={setLoadingDetails}
         />
       )}
     </>
@@ -163,7 +159,6 @@ const useStyles = createUseStyles(
       marginTop: 15,
       marginInline: 32,
     },
-    // Transition group styles
     fadeEnter: {
       opacity: 0,
       transform: 'scale(0.95)',
@@ -208,8 +203,8 @@ const useStyles = createUseStyles(
     },
 
     ball: {
-      width: 60, // Reduced width to 60px
-      height: 60, // Reduced height to 60px
+      width: 60,
+      height: 60,
       borderRadius: '50%',
       position: 'relative',
       background:
@@ -220,9 +215,9 @@ const useStyles = createUseStyles(
       '&::after': {
         content: '""',
         position: 'absolute',
-        top: 'calc(30px - 2px)', // Adjusted for smaller size
+        top: 'calc(30px - 2px)',
         left: 0,
-        width: 60, // Reduced width to match the ball
+        width: 60,
         height: 4,
         background: '#3f3f3f',
       },
@@ -230,10 +225,10 @@ const useStyles = createUseStyles(
       '&::before': {
         content: '""',
         position: 'absolute',
-        top: 20, // Adjusted for smaller size
-        left: 20, // Adjusted for smaller size
-        width: 15, // Smaller inner circle width
-        height: 15, // Smaller inner circle height
+        top: 20,
+        left: 20,
+        width: 15,
+        height: 15,
         border: '3px solid #3f3f3f',
         borderRadius: '50%',
         background: 'white',
