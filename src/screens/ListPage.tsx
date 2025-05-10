@@ -1,6 +1,7 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
 import { PokemonList } from '../components';
+import PokemonDetailsDialog from '../components/PokemonDetailsDialog/PokemonDetailsDialog';
 
 export const ListPage = () => {
   const classes = useStyles();

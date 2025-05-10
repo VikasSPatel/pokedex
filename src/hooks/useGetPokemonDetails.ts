@@ -1,5 +1,7 @@
 // src/hooks/useGetPokemonDetails.ts
 import { gql, useQuery } from '@apollo/client';
+import { PokemonDetails } from '../types/pokemonTypes';
+import { useMemo } from 'react';
 
 export const GET_POKEMON_DETAILS = gql`
   query pokemon($id: String, $name: String) {
@@ -33,10 +35,10 @@ export const useGetPokemonDetails = (id?: string, name?: string) => {
     skip: !id && !name, // skip query if no id or name
   });
 
-  console.log(data);
+  const pokemon: PokemonDetails = useMemo(() => data?.pokemon || [], [data]);
 
   return {
-    pokemon: data?.pokemon,
+    pokemon,
     loading,
     error,
   };
