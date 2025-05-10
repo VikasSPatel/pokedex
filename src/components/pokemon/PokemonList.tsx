@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { useGetPokemons } from '../../hooks/useGetPokemons';
-import PokemonItem from '../PokemonItem/PokemonItem';
+import PokemonItem from './PokemonItem';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { Pokemon, PokemonListProps } from '../../types/pokemonTypes';
 import { Link } from 'react-router-dom';
-import Loader from '../Loader/Loader';
+import Loader from '../common/Loader';
+import { Box, TextField, Typography } from '@material-ui/core';
 
-export const PokemonList: React.FC<PokemonListProps> = ({ onPokemonClick }) => {
+const PokemonList: React.FC<PokemonListProps> = ({ onPokemonClick }) => {
   const classes = useStyles();
   const { pokemons, loading } = useGetPokemons();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [displayedPokemons, setDisplayedPokemons] = useState<Pokemon[]>([]);
   const [observer, setObserver] = useState<IntersectionObserver | null>(null);
-  const nodeRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -63,15 +63,15 @@ export const PokemonList: React.FC<PokemonListProps> = ({ onPokemonClick }) => {
 
   return (
     <>
-      <div className={classes.searchContainer}>
-        <input
-          type="text"
+      <Box className={classes.searchContainer}>
+        <TextField
           placeholder="Search by name, type, or number..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className={classes.searchInput}
+          variant="outlined"
         />
-      </div>
+      </Box>
       {loading && <Loader />}
       {filteredPokemons.length > 0 ? (
         <TransitionGroup className={classes.root}>
@@ -85,7 +85,6 @@ export const PokemonList: React.FC<PokemonListProps> = ({ onPokemonClick }) => {
                 exit: classes.fadeExit,
                 exitActive: classes.fadeExitActive,
               }}
-              nodeRef={nodeRef}
             >
               <Link
                 to={`/pokemon/${pkmn.name}`}
@@ -98,16 +97,20 @@ export const PokemonList: React.FC<PokemonListProps> = ({ onPokemonClick }) => {
           ))}
         </TransitionGroup>
       ) : (
-        !loading &&
-        (search ? (
-          <div className={classes.noResults}>
-            Oops! This Pokémon isn't listed in the Pokédex.
-          </div>
-        ) : (
-          <div className={classes.noResults}>
-            No Data Found! Please try again later.
-          </div>
-        ))
+        !loading && (
+          <>
+            {search && filteredPokemons.length === 0 && (
+              <Box className={classes.noResults}>
+                Oops! This Pokémon isn't listed in the Pokédex.
+              </Box>
+            )}
+            {!search && pokemons.length === 0 && (
+              <Box className={classes.noResults}>
+                No Data Found! Please try again later.
+              </Box>
+            )}
+          </>
+        )
       )}
       <div
         ref={(el) => {
@@ -123,18 +126,21 @@ const useStyles = createUseStyles(
     root: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-      gap: 20,
+      gap: 30,
       padding: '2rem',
       justifyItems: 'center',
       position: 'relative',
     },
     searchInput: {
       padding: '0.5rem 1rem',
-      borderRadius: 8,
       border: '1px solid #ccc',
       width: '100%',
       color: '#000',
       height: 40,
+      '& .MuiInputBase-root': {
+        backgroundColor: '#fff',
+        borderRadius: 8,
+      },
     },
     searchContainer: {
       marginTop: 15,
@@ -169,3 +175,5 @@ const useStyles = createUseStyles(
   },
   { name: 'PokemonList' }
 );
+
+export default PokemonList;

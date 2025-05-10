@@ -2,19 +2,9 @@ import clsx from 'clsx';
 import React from 'react';
 import { createUseStyles } from 'react-jss';
 import { NavLink } from 'react-router-dom';
+import { NavOptionProps } from '../../types/nav';
 
-interface NavOptionProps {
-  to: string;
-  icon: string;
-  name: string;
-}
-
-export const NavOption: React.FC<NavOptionProps> = ({
-  to,
-  icon,
-  name,
-  children,
-}) => {
+const NavOption: React.FC<NavOptionProps> = ({ to, icon, name, children }) => {
   const classes = useStyles();
 
   const getRootClassName = ({ isActive }: { isActive: boolean }) => {
@@ -72,3 +62,5 @@ const useStyles = createUseStyles(
   },
   { name: 'NavOption' }
 );
+
+export default NavOption;

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { createUseStyles } from 'react-jss';
-import { PokemonList } from '../components';
-import PokemonDetailsDialog from '../components/PokemonDetailsDialog/PokemonDetailsDialog';
+import PokemonList from '../components/pokemon/PokemonList';
+import PokemonDetailsDialog from '../components/pokemon/PokemonDetailsDialog';
 import { useNavigate, useParams } from 'react-router-dom';
 
-export const ListPage = () => {
+const ListPage = () => {
   const classes = useStyles();
   const { name } = useParams();
   const navigate = useNavigate();
@@ -46,3 +46,5 @@ const useStyles = createUseStyles(
   },
   { name: 'ListPage' }
 );
+
+export default ListPage;

@@ -1,5 +1,14 @@
 import { createUseStyles } from 'react-jss';
 
+const Loader = () => {
+  const classes = useStyles();
+  return (
+    <div className={classes.container}>
+      <div className={classes.ball}></div>
+    </div>
+  );
+};
+
 const useStyles = createUseStyles({
   container: {
     position: 'fixed',
@@ -62,14 +71,5 @@ const useStyles = createUseStyles({
     to: { boxShadow: '0 0 8px -1px #c62828 inset' },
   },
 });
-
-const Loader = () => {
-  const classes = useStyles();
-  return (
-    <div className={classes.container}>
-      <div className={classes.ball}></div>
-    </div>
-  );
-};
 
 export default Loader;

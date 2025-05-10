@@ -1,10 +1,11 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import { useLayout, useToggleNav } from '../../contexts';
+import { useLayout, useToggleNav } from '../../contexts/LayoutContext';
 import clsx from 'clsx';
-import { NavOption } from './NavOption';
+import NavOption from './NavOption';
+import { StyleProps } from '../../types/nav';
 
-export const Nav = () => {
+const Nav = () => {
   const { navCollapsed } = useLayout();
   const classes = useStyles({ navCollapsed });
   const toggleNav = useToggleNav();
@@ -14,7 +15,11 @@ export const Nav = () => {
       <div className={classes.root}>
         <div className={classes.main}>
           <div className={classes.title}>
-            <img src="/pokeball-white.png" className={classes.img} />
+            <img
+              src="/pokeball-white.png"
+              className={classes.img}
+              alt="Pokeball logo"
+            />
             <h3>Pokémon</h3>
           </div>
           <NavOption to="/" icon="home" name="Home">
@@ -25,14 +30,20 @@ export const Nav = () => {
           </NavOption>
         </div>
         <div className={classes.bottom}>
-          <button className={classes.expandBtn} onClick={() => toggleNav()}>
+          <button
+            className={classes.expandBtn}
+            onClick={toggleNav}
+            aria-label={
+              navCollapsed ? 'Expand navigation' : 'Collapse navigation'
+            }
+          >
             <span
               title={navCollapsed ? 'Expand' : 'Collapse'}
               className={clsx(classes.btnIcon, 'material-icons')}
             >
               {navCollapsed ? 'unfold_more' : 'unfold_less'}
             </span>
-            <span className={classes.btnTxt}>Collapse</span>
+            {!navCollapsed && <span className={classes.btnTxt}>Collapse</span>}
           </button>
         </div>
       </div>
@@ -41,9 +52,7 @@ export const Nav = () => {
   );
 };
 
-interface StyleProps {
-  navCollapsed: boolean;
-}
+const navWidth = (collapsed: boolean) => (collapsed ? '81px' : '320px');
 
 const useStyles = createUseStyles(
   {
@@ -54,7 +63,7 @@ const useStyles = createUseStyles(
       left: 0,
       top: 0,
       bottom: 0,
-      width: (props: StyleProps) => (props.navCollapsed ? '81px' : '320px'),
+      width: (props: StyleProps) => navWidth(props.navCollapsed),
       display: 'flex',
       flexDirection: 'column',
       transition: 'width .2s ease-in-out',
@@ -62,7 +71,7 @@ const useStyles = createUseStyles(
     },
     spacer: {
       height: '100%',
-      width: (props: StyleProps) => (props.navCollapsed ? '81px' : '320px'),
+      width: (props: StyleProps) => navWidth(props.navCollapsed),
       transition: 'width .2s ease-in-out',
     },
     main: {
@@ -109,7 +118,9 @@ const useStyles = createUseStyles(
       overflow: 'hidden',
     },
     btnIcon: {
-      transform: 'rotate(90deg)',
+      transform: (props: StyleProps) =>
+        props.navCollapsed ? 'rotate(90deg)' : 'rotate(270deg)',
+      transition: 'transform 0.2s ease-in-out',
     },
     btnTxt: {
       marginLeft: '18px',
@@ -118,3 +129,5 @@ const useStyles = createUseStyles(
   },
   { name: 'Nav' }
 );
+
+export default Nav;

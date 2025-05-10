@@ -1,10 +1,35 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
-import Grid from '@material-ui/core/Grid';
 import pokeColor from '../../utils/pokeColor';
 import { Pokemon } from '../../types/pokemonTypes';
+import { Box, Typography } from '@material-ui/core';
 
-type useStyleProps = { type: string };
+function PokemonItem({ pokemon }: { pokemon: Pokemon }) {
+  const classes = useStyles({ type: pokemon.types[0] });
+
+  return (
+    <Box className={classes.pokeCard}>
+      <img
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${parseInt(
+          pokemon.number,
+          10
+        )}.png`}
+        alt={pokemon.name}
+        className={`${classes.pokeImage} ${classes.pokeImageHover}`}
+      />
+      <Typography className={classes.backgroundOverlay} />
+      <Typography className={classes.pokeName}>{pokemon.name}</Typography>
+      <Typography className={classes.pokeNumber}>#{pokemon.number}</Typography>
+      <Box className={classes.pokeTypes}>
+        {pokemon.types.map((type, idx) => (
+          <Typography key={idx} className={classes.pokeTypeTag}>
+            {type}
+          </Typography>
+        ))}
+      </Box>
+    </Box>
+  );
+}
 
 const useStyles = createUseStyles(
   {
@@ -20,7 +45,7 @@ const useStyles = createUseStyles(
       cursor: 'pointer',
       alignItems: 'center',
       backgroundImage: `url('/pokeball-white.png') 0.5`,
-      backgroundColor: (props: useStyleProps) =>
+      backgroundColor: (props: { type: string }) =>
         pokeColor[props.type.toLowerCase()] || '#fff',
       transition:
         'transform 0.3s ease, box-shadow 0.3s ease,  opacity 0.3s ease',
@@ -31,12 +56,11 @@ const useStyles = createUseStyles(
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundImage: `url('/logo.png')`,
+        backgroundImage: `url('/pokeball-white.png')`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundPosition: '75px 100px',
         backgroundRepeat: 'no-repeat',
-        opacity: 0.3,
-        zIndex: -1,
+        opacity: 0.05,
       },
 
       '& $pokeName': {
@@ -93,32 +117,5 @@ const useStyles = createUseStyles(
   },
   { name: 'PokemonItem' }
 );
-
-function PokemonItem({ pokemon }: { pokemon: Pokemon }) {
-  const classes = useStyles({ type: pokemon.types[0] });
-
-  return (
-    <div className={classes.pokeCard}>
-      <img
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${parseInt(
-          pokemon.number,
-          10
-        )}.png`}
-        alt={pokemon.name}
-        className={`${classes.pokeImage} ${classes.pokeImageHover}`}
-      />
-      <div className={classes.backgroundOverlay} />
-      <div className={classes.pokeName}>{pokemon.name}</div>
-      <div className={classes.pokeNumber}>#{pokemon.number}</div>
-      <div className={classes.pokeTypes}>
-        {pokemon.types.map((type, idx) => (
-          <div key={idx} className={classes.pokeTypeTag}>
-            {type}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default PokemonItem;

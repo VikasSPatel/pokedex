@@ -1,11 +1,15 @@
 import React from 'react';
 import { createUseStyles } from 'react-jss';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { LayoutProvider } from '../contexts';
-import { Nav } from '../components';
+import { LayoutProvider } from '../contexts/LayoutContext';
+import Nav from '../components/nav/Nav';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './client';
-import { ListPage, Home } from '../screens';
+import { Suspense, lazy } from 'react';
+import Loader from '../components/common/Loader';
+
+const Home = lazy(() => import('../screens/Home'));
+const ListPage = lazy(() => import('../screens/ListPage'));
 
 function App() {
   const classes = useStyles();
@@ -17,11 +21,13 @@ function App() {
             <Nav />
             <div className={classes.content}>
               <div className={classes.scrollableArea}>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/pokemon" element={<ListPage />} />
-                  <Route path="/pokemon/:name" element={<ListPage />} />
-                </Routes>
+                <Suspense fallback={<Loader />}>
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/pokemon" element={<ListPage />} />
+                    <Route path="/pokemon/:name" element={<ListPage />} />
+                  </Routes>
+                </Suspense>
               </div>
             </div>
           </BrowserRouter>

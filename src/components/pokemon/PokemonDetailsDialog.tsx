@@ -10,13 +10,13 @@ import {
   Typography,
   Grid,
   Chip,
+  Box,
 } from '@material-ui/core';
 import { useGetPokemonDetails } from '../../hooks/useGetPokemonDetails';
 import { createUseStyles } from 'react-jss';
 import pokeColor from '../../utils/pokeColor';
-import { useParams } from 'react-router-dom';
 import { PokemonDetailsDialogProps } from '../../types/pokemonTypes';
-import Loader from '../Loader/Loader';
+import Loader from '../common/Loader';
 
 const PokemonDetailsDialog: React.FC<PokemonDetailsDialogProps> = ({
   pokemonName,
@@ -32,23 +32,7 @@ const PokemonDetailsDialog: React.FC<PokemonDetailsDialogProps> = ({
     return <Loader />;
   }
 
-  if (error) {
-    return (
-      <Dialog open onClose={onClose} maxWidth="md">
-        <DialogTitle>Error</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1">
-            There was an error loading the Pokémon details.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose} color="primary" variant="contained">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    );
-  }
+  if (!pokemon) return null;
 
   return (
     <Dialog open onClose={onClose} maxWidth="md">
@@ -110,11 +94,10 @@ const PokemonDetailsDialog: React.FC<PokemonDetailsDialogProps> = ({
                   <strong>Weight:</strong> {pokemon?.weight?.minimum} -{' '}
                   {pokemon?.weight?.maximum}
                 </Typography>
-
-                <Typography variant="body2" className={classes.section}>
-                  <p>
+                <Box className={classes.section}>
+                  <Typography variant="body2">
                     <strong>Resistant:</strong>
-                  </p>
+                  </Typography>
                   {pokemon?.resistant?.map((type) => (
                     <Chip
                       key={type}
@@ -127,12 +110,11 @@ const PokemonDetailsDialog: React.FC<PokemonDetailsDialogProps> = ({
                       }}
                     />
                   ))}
-                </Typography>
-
-                <Typography variant="body2" className={classes.section}>
-                  <p>
+                </Box>
+                <Box className={classes.section}>
+                  <Typography variant="body2" className={classes.section}>
                     <strong>Weaknesses:</strong>
-                  </p>
+                  </Typography>
                   {pokemon?.weaknesses?.map((type) => (
                     <Chip
                       key={type}
@@ -145,19 +127,19 @@ const PokemonDetailsDialog: React.FC<PokemonDetailsDialogProps> = ({
                       }}
                     />
                   ))}
-                </Typography>
+                </Box>
 
-                <Typography variant="body2" className={classes.section}>
-                  <div>
+                <Box className={classes.section}>
+                  <Typography variant="body2">
                     <strong>Flee Rate:</strong> {pokemon?.fleeRate}
-                  </div>
-                  <div>
+                  </Typography>
+                  <Typography variant="body2">
                     <strong>Max CP:</strong> {pokemon?.maxCP}
-                  </div>
-                  <div>
+                  </Typography>
+                  <Typography variant="body2">
                     <strong>Max HP:</strong> {pokemon?.maxHP}
-                  </div>
-                </Typography>
+                  </Typography>
+                </Box>
               </CardContent>
             </Card>
           </Grid>

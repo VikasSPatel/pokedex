@@ -3,7 +3,7 @@ import { createUseStyles } from 'react-jss';
 import ReactMarkdown from 'react-markdown';
 import README from '../README.md';
 
-export const Home = () => {
+const Home = () => {
   const classes = useStyles();
   const [markdown, setMarkdown] = useState('');
 
@@ -54,3 +54,5 @@ const useStyles = createUseStyles(
   },
   { name: 'Home' }
 );
+
+export default Home;
