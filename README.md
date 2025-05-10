@@ -2,7 +2,7 @@
 
 Pokédex is a high-tech, interactive encyclopedia used to identify and gather information about Pokémon. This web application lets users explore detailed data about the first 151 Pokémon with a sleek and responsive UI.
 
-[Pokédex Screenshot](./Pokedex_Preview.png)
+![Pokédex Screenshot](./Pokedex_Preview.png)
 
 ---
 
