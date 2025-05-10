@@ -1,23 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { useGetPokemons } from '../../hooks/useGetPokemons';
 import PokemonItem from '../PokemonItem/PokemonItem';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import PokemonDetailsDialog from '../PokemonDetailsDialog/PokemonDetailsDialog';
-import { Pokemon } from '../../types/pokemonTypes';
+import { Pokemon, PokemonListProps } from '../../types/pokemonTypes';
+import { Link } from 'react-router-dom';
+import Loader from '../Loader/Loader';
 
-export const PokemonList = () => {
+export const PokemonList: React.FC<PokemonListProps> = ({ onPokemonClick }) => {
   const classes = useStyles();
   const { pokemons, loading } = useGetPokemons();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [selectedPokemonId, setSelectedPokemonId] = useState<string | null>(
-    null
-  );
   const [displayedPokemons, setDisplayedPokemons] = useState<Pokemon[]>([]);
-
   const [observer, setObserver] = useState<IntersectionObserver | null>(null);
-  const [loadingDetails, setLoadingDetails] = useState(false);
+  const nodeRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,14 +61,6 @@ export const PokemonList = () => {
     );
   });
 
-  const handlePokemonClick = (id: string) => {
-    setSelectedPokemonId(id);
-  };
-
-  const handleCloseDialog = () => {
-    setSelectedPokemonId(null);
-  };
-
   return (
     <>
       <div className={classes.searchContainer}>
@@ -83,11 +72,7 @@ export const PokemonList = () => {
           className={classes.searchInput}
         />
       </div>
-      {(loading || loadingDetails) && (
-        <div className={classes.container}>
-          <div className={classes.ball}></div>
-        </div>
-      )}
+      {loading && <Loader />}
       {filteredPokemons.length > 0 ? (
         <TransitionGroup className={classes.root}>
           {filteredPokemons.map((pkmn) => (
@@ -100,11 +85,15 @@ export const PokemonList = () => {
                 exit: classes.fadeExit,
                 exitActive: classes.fadeExitActive,
               }}
+              nodeRef={nodeRef}
             >
-              <PokemonItem
-                pokemon={pkmn}
-                onClick={() => handlePokemonClick(pkmn.id)}
-              />
+              <Link
+                to={`/pokemon/${pkmn.name}`}
+                onClick={() => onPokemonClick(pkmn.name)}
+                className={classes.cardLink}
+              >
+                <PokemonItem pokemon={pkmn} />
+              </Link>
             </CSSTransition>
           ))}
         </TransitionGroup>
@@ -125,14 +114,6 @@ export const PokemonList = () => {
           if (el) observer?.observe(el);
         }}
       />
-      {selectedPokemonId && (
-        <PokemonDetailsDialog
-          open={Boolean(selectedPokemonId)}
-          onClose={handleCloseDialog}
-          pokemonId={selectedPokemonId}
-          showLoader={setLoadingDetails}
-        />
-      )}
     </>
   );
 };
@@ -176,92 +157,14 @@ const useStyles = createUseStyles(
       transform: 'scale(0.95)',
       transition: 'opacity 500ms, transform 500ms',
     },
-
-    '@keyframes roll': {
-      from: { transform: 'rotate(0)' },
-      '90%': { transform: 'rotate(720deg)' },
-      to: { transform: 'rotate(720deg)' },
-    },
-
-    '@keyframes button': {
-      from: { boxShadow: '0 0 8px -1px #c62828 inset' },
-      '25%': { boxShadow: '0 0 6px -1px #1300ea inset' },
-      '50%': { boxShadow: '0 0 8px -1px #c62828 inset' },
-      '75%': { boxShadow: '0 0 6px -1px #1300ea inset' },
-      to: { boxShadow: '0 0 8px -1px #c62828 inset' },
-    },
-
-    container: {
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1,
-    },
-
-    ball: {
-      width: 60,
-      height: 60,
-      borderRadius: '50%',
-      position: 'relative',
-      background:
-        'linear-gradient(to bottom, #e83e35 0%, #e83e35 50.5%, #ffffff 50.51%, #ffffff 100%)',
-      boxShadow: '-6px 0 rgba(0, 0, 0, 0.1) inset',
-      animation: '$roll 1s ease-in-out infinite',
-
-      '&::after': {
-        content: '""',
-        position: 'absolute',
-        top: 'calc(30px - 2px)',
-        left: 0,
-        width: 60,
-        height: 4,
-        background: '#3f3f3f',
-      },
-
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 20,
-        left: 20,
-        width: 15,
-        height: 15,
-        border: '3px solid #3f3f3f',
-        borderRadius: '50%',
-        background: 'white',
-        zIndex: 1,
-        boxShadow: '0 0 8px -1px #c62828 inset',
-        animation: '$button 3s ease infinite',
-      },
-    },
-    loadMoreContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      marginBottom: 40,
-    },
-    loadMoreButton: {
-      margin: '2rem auto',
-      padding: '0.75rem 1.5rem',
-      fontSize: '1rem',
-      borderRadius: 8,
-      border: 'none',
-      backgroundColor: '#3f51b5',
-      color: '#fff',
-      cursor: 'pointer',
-      transition: 'background 0.3s',
-      '&:hover': {
-        backgroundColor: '#2c3ea8',
-      },
-      alignContent: 'center',
-    },
     noResults: {
       textAlign: 'center',
       marginTop: '2rem',
       color: '#666',
       fontSize: '1.2rem',
+    },
+    cardLink: {
+      textDecoration: 'none',
     },
   },
   { name: 'PokemonList' }

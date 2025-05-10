@@ -94,17 +94,11 @@ const useStyles = createUseStyles(
   { name: 'PokemonItem' }
 );
 
-function PokemonItem({
-  pokemon,
-  onClick,
-}: {
-  pokemon: Pokemon;
-  onClick: () => void;
-}) {
+function PokemonItem({ pokemon }: { pokemon: Pokemon }) {
   const classes = useStyles({ type: pokemon.types[0] });
 
   return (
-    <div className={classes.pokeCard} onClick={onClick}>
+    <div className={classes.pokeCard}>
       <img
         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${parseInt(
           pokemon.number,

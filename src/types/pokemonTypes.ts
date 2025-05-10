@@ -33,3 +33,12 @@ export interface PokemonDetails {
   maxHP: number;
   image: string;
 }
+
+export interface PokemonListProps {
+  onPokemonClick: (pokemonName: string) => void;
+}
+
+export interface PokemonDetailsDialogProps {
+  pokemonName: string;
+  onClose: () => void;
+}

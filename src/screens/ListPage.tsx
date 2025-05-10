@@ -1,14 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createUseStyles } from 'react-jss';
 import { PokemonList } from '../components';
 import PokemonDetailsDialog from '../components/PokemonDetailsDialog/PokemonDetailsDialog';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const ListPage = () => {
   const classes = useStyles();
+  const { name } = useParams();
+  const navigate = useNavigate();
+
+  const [selectedPokemon, setSelectedPokemon] = useState<string | null>(
+    name || null
+  );
+
+  const closeDialog = () => {
+    setSelectedPokemon(null);
+    navigate('/pokemon');
+  };
+
+  useEffect(() => {
+    setSelectedPokemon(name || null);
+  }, [name]);
 
   return (
     <div className={classes.root}>
-      <PokemonList />
+      <PokemonList
+        onPokemonClick={(pokemonName) => setSelectedPokemon(pokemonName)}
+      />
+      {selectedPokemon && (
+        <PokemonDetailsDialog
+          pokemonName={selectedPokemon}
+          onClose={closeDialog}
+        />
+      )}
     </div>
   );
 };
